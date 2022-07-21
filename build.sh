@@ -13,7 +13,7 @@ cd ${0%/*}
 
 IMAGE=wsl2-linux-kernel-docker-build
 
-docker build . -t $IMAGE
+docker build . -t $IMAGE --no-cache
 
 echo "Finish, press 'Enter' key to exit"
 read
