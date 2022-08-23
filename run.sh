@@ -8,14 +8,17 @@ err() {
 	exit 1
 }
 trap 'err $LINENO' ERR
+
 cd ${0%/*}
+
 docker rm -f wsl2-linux-kernel-docker-build || true
 rm -f vmlinux || true
 
 docker run -it --rm --name wsl2-linux-kernel-docker-build \
 	-v $(pwd):/tmp/build \
 	wsl2-linux-kernel-docker-build bash -c " \
-        cat Microsoft/config-wsl /tmp/build/config >> .config \
+        /tmp/build/patch-config.sh Microsoft/config-wsl /tmp/build/config .config \
+		&& make olddefconfig \
 		&& make -j$(nproc) \
 		&& cp -f arch/x86_64/boot/bzImage /tmp/build \
 	"
